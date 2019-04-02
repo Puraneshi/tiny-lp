@@ -2,5 +2,6 @@
 Creating an interpreted language in JAVA
 
 
-Missing: IF-ELSE statements
-ATTRIB
+Missing: .IF-ELSE statements
+
+.ATTRIB
