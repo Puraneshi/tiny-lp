@@ -1,8 +1,8 @@
 package Comando;
 
-public class ComandoWriteln extends Comando {
+public class ComandoWriteLn extends Comando {
 
-    public ComandoWriteln(int lin) {
+    public ComandoWriteLn(int lin) {
         linha = lin;
     }
 
