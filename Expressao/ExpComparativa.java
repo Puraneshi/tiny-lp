@@ -17,19 +17,26 @@ public class ExpComparativa extends Expressao {
     }
 
     public double avalia() {
-
-        boolean v = false;
-        double valor = FALSE;
-
-        opr1 = (Expressao) exp1;
-        opr2 = (Expressao) exp2;
-
-        //insira seu codigo aqui
-        if (v == true) {
-            valor = TRUE;
+        opr1 = (Expressao)exp1;
+        opr2 = (Expressao)exp2;
+        // com switch case, podemos encurtar o codigo com o 'default'
+        switch(op){
+            case ">":
+                if(opr1.avalia() > opr2.avalia()) return TRUE;
+                else return FALSE;
+            case ">=":
+                if(opr1.avalia() >= opr2.avalia()) return TRUE;
+                else return FALSE;
+            case "<":
+                return opr1.avalia() < opr2.avalia() ? TRUE:FALSE;
+            case "<=":
+                return opr1.avalia() <= opr2.avalia() ? TRUE:FALSE;
+            case "=":
+                return opr1.avalia() == opr2.avalia() ? TRUE:FALSE;
+            case "<>":
+                return opr1.avalia() != opr2.avalia() ? TRUE:FALSE;
+            default:
+                return FALSE;
         }
-
-        return valor;
-
     }
 }

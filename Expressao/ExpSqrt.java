@@ -11,9 +11,10 @@ public class ExpSqrt extends Expressao {
     }
 
     public double avalia() {
-        double valor;
+        int posicao = (int)sqrt.charAt(0) - 97;
+        double valor = Variaveis.var[posicao];
 
-        //insira seu codigo aqui
+        valor = Math.sqrt(valor);
         return valor;
     }
 

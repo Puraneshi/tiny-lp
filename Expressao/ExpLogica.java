@@ -17,21 +17,19 @@ public class ExpLogica extends Expressao {
     }
 
     public double avalia() {
-
-        boolean v = false,
-                opr1B = false,
-                opr2B = false;
-        double valor = FALSE;
-
         opr1 = (Expressao) exp1;
         opr2 = (Expressao) exp2;
-
-        //insira seu codigo aqui
-        if (v == true) {
-            valor = TRUE;
+        
+        switch(op){
+            case "and":
+                return (opr1.avalia()==1) && (opr2.avalia()==1) ? TRUE:FALSE;
+            case "or":
+                return (opr1.avalia()==1) || (opr2.avalia()==1) ? TRUE:FALSE;
+            
+            // case "not": nao sei o que fazer com o not...
+            default:
+                return FALSE;
         }
-
-        return valor;
 
     }
 }
