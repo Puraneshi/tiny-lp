@@ -1,4 +1,3 @@
-
 import Variavel.*;
 import Comando.*;
 import Expressao.*;
@@ -101,7 +100,7 @@ public class Interpretador {
 
     private void trataComandoWriteln(int lin) {
 
-        ComandoWriteln c = new ComandoWriteln(lin);
+        ComandoWriteLn c = new ComandoWriteLn(lin);
         comandos.addElement(c);
     }
 
@@ -115,11 +114,12 @@ public class Interpretador {
         trataExpressao();
         ComandoIf c = new ComandoIf(lin, raizArvoreExpressao);
         comandos.addElement(c);
+        c.setLinhaElse(-1);
     }
 
     private void trataComandoElse(int lin, int linIf) {
         ComandoIf cmd = (ComandoIf) comandos.elementAt(linIf);
-        cmd.setLinhaEnd(lin + 1);
+        cmd.setLinhaElse(lin);
         ComandoElse c = new ComandoElse(lin);
         comandos.addElement(c);
     }
@@ -164,7 +164,7 @@ public class Interpretador {
             expressao();
             Object exp1 = pilha.pop();
             Object exp2 = pilha.pop();
-            pilha.push(new ExpComparativa(op, exp1, exp2));
+            pilha.push(new ExpComparativa(op, exp2, exp1));
         }
     }
 
@@ -176,7 +176,8 @@ public class Interpretador {
             termo();
             Object exp1 = pilha.pop();
             Object exp2 = pilha.pop();
-            pilha.push(new ExpBinaria(op, exp1, exp2));
+            // ordem de processamento invertida pela forma que a pilha funciona
+            pilha.push(new ExpBinaria(op, exp2, exp1));
         }
     }
 
@@ -188,7 +189,8 @@ public class Interpretador {
             fator();
             Object exp1 = pilha.pop();
             Object exp2 = pilha.pop();
-            pilha.push(new ExpBinaria(op, exp1, exp2));
+            // ordem de processamento invertida pela forma que a pilha funciona
+            pilha.push(new ExpBinaria(op, exp2, exp1));
         }
     }
 
