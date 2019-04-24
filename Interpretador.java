@@ -58,6 +58,7 @@ public class Interpretador {
                 comandoAtual = arq.proximaPalavra();
                 trataComandoRead(linha, comandoAtual);
                 linha++;
+            // *************** IF-ELSE ************************
             } else if (comandoAtual.equals("if")) {
                 pilhaC.push(linha);
                 trataComandoIf(linha);
@@ -69,7 +70,30 @@ public class Interpretador {
                 linha++;
             } else if (comandoAtual.equals("endif")) {
                 int linhaIf = (Integer) pilhaC.pop();
-                trataComandoEndif(linha, linhaIf);;
+                trataComandoEndif(linha, linhaIf);
+            // ****************** WHILE ***********************
+            } else if (comandoAtual.equals("while")) {
+                pilhaC.push(linha);
+                trataComandoWhile(linha);
+                linha++;
+            } else if (comandoAtual.equals("endw")) {
+                int linhaWhile = (Integer)pilhaC.pop();
+                trataComandoEndW(linha, linhaWhile);
+                linha++;
+            // **************** FOR *******************************
+            } else if(comandoAtual.equals("for")){
+                pilhaC.push(linha);
+                String var = arq.proximaPalavra();
+                arq.proximaPalavra();
+                int val = Integer.parseInt(arq.proximaPalavra());
+                String tipo = arq.proximaPalavra();
+                trataComandoFor(linha, var, val, tipo);
+                linha++;
+            } else if(comandoAtual.equals("endfor")){
+                int linhaFor = (Integer)pilhaC.pop();
+                trataComandoEndF(linha, linhaFor);
+                linha++;
+            // ****************** VARIAVEL ***********************
             } else if (comandoAtual.length() == 1 && comandoAtual.charAt(0) >= 'a' && comandoAtual.charAt(0) <= 'z') {
                 String variavel = comandoAtual;
                 comandoAtual = arq.proximaPalavra();
@@ -80,6 +104,7 @@ public class Interpretador {
         } while (!comandoAtual.equals("endp"));
     }
 
+    // ***************** Tratacomandos *************************
     private void trataComandoEndp(int lin) {
 
         ComandoEndp c = new ComandoEndp(lin);
@@ -109,7 +134,8 @@ public class Interpretador {
         ComandoRead c = new ComandoRead(lin, txt);
         comandos.addElement(c);
     }
-
+    
+    //******************** IF-ELSE *********************************
     private void trataComandoIf(int lin) {
         trataExpressao();
         ComandoIf c = new ComandoIf(lin, raizArvoreExpressao);
@@ -128,14 +154,42 @@ public class Interpretador {
         Condicao cmd = (Condicao) comandos.elementAt(linIfElse);
         cmd.setLinhaEnd(lin);
     }
-
+    // ************************* WHILE ******************************
+    private void trataComandoWhile(int lin) {
+        trataExpressao();
+        ComandoWhile c = new ComandoWhile(lin, raizArvoreExpressao);
+        comandos.addElement(c);
+    }
+    
+    private void trataComandoEndW(int lin, int linWhile) {
+        Condicao cmd = (Condicao) comandos.elementAt(linWhile);
+        cmd.setLinhaEnd(lin);
+        ComandoEndW c = new ComandoEndW(lin, linWhile);
+        comandos.addElement(c);
+    }
+    
+    // ************************* FOR *************************
+    private void trataComandoFor(int lin, String variavel, int valor, String tipo) {
+        trataExpressao();
+        ComandoFor c = new ComandoFor(lin, variavel.charAt(0), valor, tipo, raizArvoreExpressao);
+        comandos.addElement(c);
+    }
+    
+    private void trataComandoEndF(int lin, int linFor) {
+        ComandoFor cmd = (ComandoFor) comandos.elementAt(linFor);
+        cmd.setLinhaEnd(lin);
+        ComandoEndF c = new ComandoEndF(lin, linFor, cmd.getVar(), cmd.getOperador());
+        comandos.addElement(c);
+    }
+    
+    
     private void trataComandoAtrib(int lin, String txt) {
         char var = txt.charAt(0);
         trataExpressao();
         ComandoAtrib c = new ComandoAtrib(lin, var, raizArvoreExpressao);
         comandos.addElement(c);
     }
-
+    // ******************** BOOLEANOS ****************
     private void trataExpressao() {
         palavraAtual = arq.proximaPalavra();
         pilha = new Stack();
@@ -167,7 +221,7 @@ public class Interpretador {
             pilha.push(new ExpComparativa(op, exp2, exp1));
         }
     }
-
+    // ************************ CALCULOS **************************
     private void expressao() {
         termo();
         while (palavraAtual.equals("+") || palavraAtual.equals("-")) {
@@ -218,14 +272,16 @@ public class Interpretador {
         }
 
     }
-
+    // ***************************** EXECUTA ************************
     public void executa() {
 
         Comando cmd;
         int pc = 0;
         do {
             cmd = (Comando) comandos.elementAt(pc);
+            //System.out.println("\nLinha " + pc + ":    "  + cmd);
             pc = cmd.executa();
+            //System.out.println("Retorno da execucao :    " + pc);
         } while (pc != -1);
     }
 
