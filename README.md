@@ -14,6 +14,6 @@ Tags:
   
   ./Variavel = file with the variable in the language(any lowercase alpha value)
 
-Missing: .IF-ELSE statements
+Missing: .functions; local variables
 
 .ATTRIB
